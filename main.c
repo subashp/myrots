@@ -22,23 +22,27 @@
 #include "stm32f4xx_it.h"
 #include "main.h"
  
-void delay()
+static void delay()
 {
   volatile unsigned int i;
-  for (i = 0xFFFFF; i > 0; i--)
+  for (i = 0xFFFFFF; i > 0; i--)
       ;
 }
  
 int main() {
-  int i = 100;
+  int j = 10;
+
+  //SystemClock_Config();
 
   BSP_LED_Init(0);
 
-  while (i--) {
+  while (j--) {
     BSP_LED_On(0);
     delay();
+    //HAL_Delay(1000);
     BSP_LED_Off(0);
     delay();
+    //HAL_Delay(1000);
   }
 
   return 0; 
