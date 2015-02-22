@@ -6,6 +6,8 @@ CC_PREFIX ?= arm-none-eabi-
 CFLAGS := -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -Os -g
 DEFINES := STM32F401xE
 
+BUILD = build
+
 INCLUDE  = ./include
 INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/CMSIS/Device/ST/STM32F4xx/Include
 INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Inc
@@ -18,65 +20,65 @@ INCLUDE += -I$(STM32CUBE_ROOT)/Projects/STM324x9I_EVAL/Examples/BSP/Inc
 VPATH += ./src/
 VPATH += $(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Src/
 
-OBJS  = stm32f4xx_hal.o
-OBJS += stm32f4xx_hal_rcc.c.o
-OBJS += stm32f4xx_hal_cortex.o
-OBJS += stm32f4xx_hal_gpio.o
-OBJS += stm32f4xx_it.o
-OBJS += stm32f4xx_nucleo.o
-OBJS += system.o
-OBJS += main.o
-OBJS += startup_stm32f401xe.o
+OBJS  = $(BUILD)/stm32f4xx_hal.o
+OBJS += $(BUILD)/stm32f4xx_hal_rcc.c.o
+OBJS += $(BUILD)/stm32f4xx_hal_cortex.o
+OBJS += $(BUILD)/stm32f4xx_hal_gpio.o
+OBJS += $(BUILD)/stm32f4xx_it.o
+OBJS += $(BUILD)/stm32f4xx_nucleo.o
+OBJS += $(BUILD)/system.o
+OBJS += $(BUILD)/main.o
+OBJS += $(BUILD)/startup_stm32f401xe.o
 
-stm32f4xx_hal.o: stm32f4xx_hal.c
+$(BUILD)/stm32f4xx_hal.o: stm32f4xx_hal.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-stm32f4xx_hal_rcc.c.o: stm32f4xx_hal_rcc.c
+$(BUILD)/stm32f4xx_hal_rcc.c.o: stm32f4xx_hal_rcc.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-stm32f4xx_hal_cortex.o: stm32f4xx_hal_cortex.c
+$(BUILD)/stm32f4xx_hal_cortex.o: stm32f4xx_hal_cortex.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-stm32f4xx_hal_gpio.o: stm32f4xx_hal_gpio.c
+$(BUILD)/stm32f4xx_hal_gpio.o: stm32f4xx_hal_gpio.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-stm32f4xx_nucleo.o: stm32f4xx_nucleo.c
+$(BUILD)/stm32f4xx_nucleo.o: stm32f4xx_nucleo.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-stm32f4xx_it.o: stm32f4xx_it.c
+$(BUILD)/stm32f4xx_it.o: stm32f4xx_it.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-system.o: system.c
+$(BUILD)/system.o: system.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-main.o: main.c
+$(BUILD)/main.o: main.c
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-startup_stm32f401xe.o: startup_stm32f401xe.s
+$(BUILD)/startup_stm32f401xe.o: startup_stm32f401xe.s
 	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-app.elf: $(OBJS)
+directory:
+	mkdir -p $(BUILD)
+
+$(BUILD)/app.elf: directory $(OBJS)
 	$(CC_PREFIX)gcc $(CFLAGS) -D$(DEFINES) -T$(STM32CUBE_ROOT)/Projects/STM32F401RE-Nucleo/Templates/TrueSTUDIO/STM32F4xx-Nucleo/STM32F401CE_FLASH.ld -Wl,--gc-sections $(OBJS) -o $@
 
-app.bin: app.elf
-	$(CC_PREFIX)objcopy -Obinary $< $@
+app.bin: $(BUILD)/app.elf
+	$(CC_PREFIX)objcopy -Obinary $< $(BUILD)/$@
 
-app.hex: app.elf
-	$(CC_PREFIX)objcopy -Oihex $< $@
+app.hex: $(BUILD)/app.elf
+	$(CC_PREFIX)objcopy -Oihex $< $(BUILD)/$@
 
-flash: app.bin
-	sudo st-flash write app.bin 0x08000000
-
-app.dmp: app.elf
-	$(CC_PREFIX)objdump --disassemble-all --reloc --full-contents --all-headers --source --syms --debugging $< > $@
+app.dmp: $(BUILD)/app.elf
+	$(CC_PREFIX)objdump --disassemble-all --reloc --full-contents --all-headers --source --syms --debugging $< > $(BUILD)/$@
 
 clean:
-	-@rm $(OBJS) app.bin app.elf
-
-distclean:
-	@rm $(OBJS) app.bin app.elf app.hex app.dmp
+	-@rm -rf $(BUILD)
 
 all: clean app.bin
 .PHONY: all
+
+flash: $(BUILD)/app.bin
+	sudo st-flash write $(BUILD)/app.bin 0x08000000
 
 dump: app.dmp
