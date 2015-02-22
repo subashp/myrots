@@ -1,49 +1,80 @@
-stm32f4xx_hal.o: ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/ -DSTM32F401xE -Os -g -c ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c -o stm32f4xx_hal.o
+# Copyright 2015, Subash Patel
 
-stm32f4xx_hal_rcc.c.o: ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/ -DSTM32F401xE -Os -g -c ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c -o stm32f4xx_hal_rcc.c.o
+STM32CUBE_ROOT := /var/repos/STM32Cube_FW_F4_V1.3.0
+CC_PREFIX := arm-none-eabi-
+CFLAGS := -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -Os -g
+DEFINES := STM32F401xE
 
-stm32f4xx_hal_cortex.o: ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/ -DSTM32F401xE -Os -g -c ../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c -o stm32f4xx_hal_cortex.o
+INCLUDE  = .
+INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Inc
+INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Src
+INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/CMSIS/Include
+INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/BSP/STM324x9I_EVAL
+INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/BSP/STM32F4xx-Nucleo/
+INCLUDE += -I$(STM32CUBE_ROOT)/Projects/STM324x9I_EVAL/Examples/BSP/Inc
+
+VPATH += $(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Src/
+
+OBJS  = stm32f4xx_hal.o
+OBJS += stm32f4xx_hal_rcc.c.o
+OBJS += stm32f4xx_hal_cortex.o
+OBJS += stm32f4xx_hal_gpio.o
+OBJS += stm32f4xx_it.o
+OBJS += stm32f4xx_nucleo.o
+OBJS += system.o
+OBJS += main.o
+OBJS += startup_stm32f401xe.o
+
+stm32f4xx_hal.o: stm32f4xx_hal.c
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
+
+stm32f4xx_hal_rcc.c.o: stm32f4xx_hal_rcc.c
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
+
+stm32f4xx_hal_cortex.o: stm32f4xx_hal_cortex.c
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
 stm32f4xx_hal_gpio.o: stm32f4xx_hal_gpio.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -DSTM32F401xE -Os -g -c stm32f4xx_hal_gpio.c -o stm32f4xx_hal_gpio.o
-
-stm32f4xx_it.o: stm32f4xx_it.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/BSP/STM324x9I_EVAL/ -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -I. -DSTM32F401xE -Os -g -c stm32f4xx_it.c -o stm32f4xx_it.o
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
 stm32f4xx_nucleo.o: stm32f4xx_nucleo.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/BSP/STM324x9I_EVAL/ -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -I. -DSTM32F401xE -Os -g -c stm32f4xx_nucleo.c -o stm32f4xx_nucleo.o
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
+
+stm32f4xx_it.o: stm32f4xx_it.c
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
 system.o: system.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I. -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Drivers/BSP/STM324x9I_EVAL/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -DSTM32F401xE -Os -g -c system.c -o system.o
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
 main.o: main.c
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/STM32F4xx_HAL_Driver/Inc/ -I../STM32Cube_FW_F4_V1.3.0/Projects/STM324x9I_EVAL/Examples/BSP/Inc/ -DSTM32F401xE -Os -g -c main.c -o main.o
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
 startup_stm32f401xe.o: startup_stm32f401xe.s
-	arm-none-eabi-gcc -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../STM32Cube_FW_F4_V1.3.0/Drivers/CMSIS/Include -DSTM32F401xE -Os -g -c startup_stm32f401xe.s -o startup_stm32f401xe.o
+	$(CC_PREFIX)gcc $(CFLAGS) -I$(INCLUDE) -D$(DEFINES) -c $< -o $@
 
-app.elf: system.o main.o startup_stm32f401xe.o stm32f4xx_hal_gpio.o stm32f4xx_it.o stm32f4xx_nucleo.o stm32f4xx_hal.o stm32f4xx_hal_rcc.c.o stm32f4xx_hal_cortex.o
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -DSTM32F401xE -T../STM32Cube_FW_F4_V1.3.0/Projects/STM32F401RE-Nucleo/Templates/TrueSTUDIO/STM32F4xx-Nucleo/STM32F401CE_FLASH.ld -Wl,--gc-sections system.o main.o startup_stm32f401xe.o stm32f4xx_hal_gpio.o stm32f4xx_it.o stm32f4xx_nucleo.o stm32f4xx_hal.o stm32f4xx_hal_rcc.c.o stm32f4xx_hal_cortex.o -o app.elf
+app.elf: $(OBJS)
+	$(CC_PREFIX)gcc $(CFLAGS) -D$(DEFINES) -T$(STM32CUBE_ROOT)/Projects/STM32F401RE-Nucleo/Templates/TrueSTUDIO/STM32F4xx-Nucleo/STM32F401CE_FLASH.ld -Wl,--gc-sections $(OBJS) -o $@
 
 app.bin: app.elf
-	arm-none-eabi-objcopy -Obinary app.elf app.bin
+	$(CC_PREFIX)objcopy -Obinary $< $@
 
 app.hex: app.elf
-	arm-none-eabi-objcopy -Oihex app.elf app.hex
+	$(CC_PREFIX)objcopy -Oihex $< $@
 
 flash: app.bin
 	sudo st-flash write app.bin 0x08000000
 
-dump: app.elf
-	arm-none-eabi-objdump --disassemble-all --reloc --full-contents --all-headers --source --syms --debugging app.elf > app.dmp
+app.dmp: app.elf
+	$(CC_PREFIX)objdump --disassemble-all --reloc --full-contents --all-headers --source --syms --debugging $< > $@
 
 clean:
-	-@rm *.o *.bin *.elf
+	-@rm $(OBJS) app.bin app.elf
 
 distclean:
-	rm *.o *.bin *.elf *.hex *.dmp
+	@rm $(OBJS) app.bin app.elf app.hex app.dmp
 
-all: clean flash
+all: clean app.bin
+.PHONY: all
+
+dump: app.dmp
