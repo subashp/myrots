@@ -1,11 +1,12 @@
-# Copyright 2015, Subash Patel
+# Copyright 2015, Subash Patel <subashrp@gmail.com>
 
-STM32CUBE_ROOT := /var/repos/STM32Cube_FW_F4_V1.3.0
-CC_PREFIX := arm-none-eabi-
+STM32CUBE_ROOT ?= /var/repos/STM32Cube_FW_F4_V1.3.0
+CC_PREFIX ?= arm-none-eabi-
+
 CFLAGS := -Wall -mcpu=cortex-m4 -mlittle-endian -mthumb -mthumb-interwork -Os -g
 DEFINES := STM32F401xE
 
-INCLUDE  = .
+INCLUDE  = ./include
 INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/CMSIS/Device/ST/STM32F4xx/Include
 INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Inc
 INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Src
@@ -14,6 +15,7 @@ INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/BSP/STM324x9I_EVAL
 INCLUDE += -I$(STM32CUBE_ROOT)/Drivers/BSP/STM32F4xx-Nucleo/
 INCLUDE += -I$(STM32CUBE_ROOT)/Projects/STM324x9I_EVAL/Examples/BSP/Inc
 
+VPATH += ./src/
 VPATH += $(STM32CUBE_ROOT)/Drivers/STM32F4xx_HAL_Driver/Src/
 
 OBJS  = stm32f4xx_hal.o
